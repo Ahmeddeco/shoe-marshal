@@ -20,14 +20,15 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { createProduct } from '@/lib/actions'
-import { ChevronLeft } from 'lucide-react'
+import { createProduct } from '@/functions/actions'
+import { ChevronLeft, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { ProductSchema } from '@/prisma/zod'
 import { useActionState, useState } from 'react'
 import { UploadDropzone } from '@/utils/uploadthing'
+import Image from 'next/image'
 
 export default function CreatePage() {
 	const [images, setImages] = useState<string[]>([])
@@ -43,6 +44,11 @@ export default function CreatePage() {
 		shouldValidate: 'onBlur',
 		shouldRevalidate: 'onInput',
 	})
+
+	const handleDelete = (index: number) => {
+		setImages(images.filter((_, i) => i !== index))
+		console.log(`We delete image number ${index}`)
+	}
 
 	return (
 		<form id={form.id} onSubmit={form.onSubmit} action={action}>
@@ -144,15 +150,40 @@ export default function CreatePage() {
 						{/* UploadDropzone */}
 						<div className='flex flex-col gap-3'>
 							<Label>Images</Label>
-							<UploadDropzone
-								endpoint='imageUploader'
-								onClientUploadComplete={(res) => {
-									setImages(res.map((r) => r.ufsUrl))
-								}}
-								onUploadError={(error: Error) => {
-									alert(`ERROR! ${error.message}`)
-								}}
-							/>
+							{images.length > 0 ? (
+								<div className='flex gap-5'>
+									{images.map((image, index) => (
+										<div className='relative size-32' key={index}>
+											<Image
+												src={image}
+												alt={'product image'}
+												height={96}
+												width={96}
+												className='w-full h-full rounded-lg border object-cover'
+											/>
+											<Button
+												type='button'
+												size={'icon'}
+												className='absolute -top-3 -right-3 size-8'
+												variant={'destructive'}
+												onClick={() => handleDelete(index)}
+											>
+												<XIcon />
+											</Button>
+										</div>
+									))}
+								</div>
+							) : (
+								<UploadDropzone
+									endpoint='imageUploader'
+									onClientUploadComplete={(res) => {
+										setImages(res.map((r) => r.ufsUrl))
+									}}
+									onUploadError={(error: Error) =>
+										alert(`ERROR! ${error.message}`)
+									}
+								/>
+							)}
 						</div>
 					</div>
 				</CardContent>
