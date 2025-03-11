@@ -1,4 +1,5 @@
 import DashboardNavigation from '@/components/layout/admin/DashboardNavigation'
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher'
 import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
@@ -36,7 +37,7 @@ export default async function DashboardLayout({
 
 	return (
 		<section className='flex w-full flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-			<header className='sticky top-0 flex h-16 z-50 items-center justify-between gap-4 border-b bg-white '>
+			<header className='sticky top-0 flex h-16 z-50 items-center justify-between gap-4 border-b bg-background/95 '>
 				<nav className='hidden font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
 					<DashboardNavigation />
 				</nav>
@@ -58,24 +59,27 @@ export default async function DashboardLayout({
 						</nav>
 					</SheetContent>
 				</Sheet>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button
-							variant={'secondary'}
-							size={'icon'}
-							className='rounded-full'
-						>
-							<CircleUserIcon className='size-5' />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align='end'>
-						<DropdownMenuLabel>My Account</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem asChild>
-							<LogoutLink>Logout</LogoutLink>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<div className='flex items-center justify-center gap-4'>
+					<ThemeSwitcher />
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant={'secondary'}
+								size={'icon'}
+								className='rounded-full'
+							>
+								<CircleUserIcon className='size-5' />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align='end'>
+							<DropdownMenuLabel>My Account</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem asChild>
+								<LogoutLink>Logout</LogoutLink>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 			</header>
 			<main className='my-5'>{children}</main>
 		</section>

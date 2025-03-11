@@ -4,6 +4,7 @@ import './globals.css'
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin'
 import { extractRouterConfig } from 'uploadthing/server'
 import { ourFileRouter } from './api/uploadthing/core'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 const inter = localFont({
 	src: '../public/fonts/Inter-Variable.ttf',
@@ -23,9 +24,16 @@ export default function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<body className={`${inter.className} antialiased`}>
-			<NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-				
-				{children}</body>
+				<NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+				<ThemeProvider
+					attribute='class'
+					defaultTheme='system'
+					enableSystem
+					disableTransitionOnChange
+				>
+					{children}
+				</ThemeProvider>
+			</body>
 		</html>
 	)
 }

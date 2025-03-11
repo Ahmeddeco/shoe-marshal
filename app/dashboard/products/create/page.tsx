@@ -24,14 +24,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { createProduct } from '@/lib/actions'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
-import { useFormState } from 'react-dom'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { ProductSchema } from '@/prisma/zod'
+import { useActionState } from 'react'
 
 export default function CreatePage() {
 
-	const [lastResult, action] = useFormState(createProduct, undefined)
+	const [lastResult, action] = useActionState(createProduct, undefined)
 	const [form, fields] = useForm({
 		lastResult,
 		onValidate({ formData }) {
