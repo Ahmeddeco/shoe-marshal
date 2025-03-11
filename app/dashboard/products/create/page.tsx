@@ -1,6 +1,5 @@
 'use client'
 
-import OurUploadDropzone from '@/components/layout/admin/OurUploadDropzone'
 import { Button } from '@/components/ui/button'
 import {
 	Card,
@@ -27,9 +26,12 @@ import Link from 'next/link'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import { ProductSchema } from '@/prisma/zod'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
+import { UploadDropzone } from '@/utils/uploadthing'
 
 export default function CreatePage() {
+	const [images, setImages] = useState<string[]>([])
+	console.log(images)
 
 	const [lastResult, action] = useActionState(createProduct, undefined)
 	const [form, fields] = useForm({
@@ -63,6 +65,7 @@ export default function CreatePage() {
 				</CardHeader>
 				<CardContent>
 					<div className='flex flex-col gap-6'>
+						{/* Name */}
 						<div className='flex flex-col gap-3'>
 							<Label>Name</Label>
 							<Input
@@ -75,6 +78,8 @@ export default function CreatePage() {
 							/>
 							<p className='text-destructive'>{fields.name.errors}</p>
 						</div>
+
+						{/* Description */}
 						<div className='flex flex-col gap-3'>
 							<Label>Description</Label>
 							<Textarea
@@ -86,6 +91,8 @@ export default function CreatePage() {
 							/>
 							<p className='text-destructive'>{fields.description.errors}</p>
 						</div>
+
+						{/* Price */}
 						<div className='flex flex-col gap-3'>
 							<Label>Price</Label>
 							<Input
@@ -107,6 +114,8 @@ export default function CreatePage() {
 							/>
 							<p className='text-destructive'>{fields.isFeatured.errors}</p>
 						</div>
+
+						{/* Status */}
 						<div className='flex flex-col gap-3'>
 							<Label>Status</Label>
 							<Select
@@ -131,10 +140,19 @@ export default function CreatePage() {
 							</Select>
 							<p className='text-destructive'>{fields.status.errors}</p>
 						</div>
-						{/* Images */}
+
+						{/* UploadDropzone */}
 						<div className='flex flex-col gap-3'>
 							<Label>Images</Label>
-							<OurUploadDropzone />
+							<UploadDropzone
+								endpoint='imageUploader'
+								onClientUploadComplete={(res) => {
+									setImages(res.map((r) => r.ufsUrl))
+								}}
+								onUploadError={(error: Error) => {
+									alert(`ERROR! ${error.message}`)
+								}}
+							/>
 						</div>
 					</div>
 				</CardContent>
